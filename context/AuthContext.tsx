@@ -31,30 +31,31 @@ export const AuthProvider = ({ children }: { children?: React.ReactNode }) => {
 
   useEffect(() => {
     if (!auth) {
-        setLoading(false);
-        return;
+      setLoading(false);
+      return;
     }
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       setLoading(true);
       if (firebaseUser) {
+        console.log("Logged in user UID:", firebaseUser.uid);
         setUser(firebaseUser);
         try {
-            // Super-admin bypass
-            if (firebaseUser.uid === 'CNJ4Lbz6KbM0vNOPAJjclEVA7Ju1') {
-                 setUserRole(UserRole.Administrator);
+          // Super-admin bypass
+          if (firebaseUser.uid === 'CNJ4Lbz6KbM0vNOPAJjclEVA7Ju1') {
+            setUserRole(UserRole.Administrator);
+          } else {
+            const docSnap = await getDoc(doc(db, 'users', firebaseUser.uid));
+            if (docSnap.exists()) {
+              setUserRole(docSnap.data()?.role as UserRole);
             } else {
-                const docSnap = await getDoc(doc(db, 'users', firebaseUser.uid));
-                if (docSnap.exists()) {
-                    setUserRole(docSnap.data()?.role as UserRole);
-                } else {
-                    console.warn("User profile not created in Firestore.");
-                    setUserRole(null);
-                }
+              console.warn("User profile not created in Firestore.");
+              setUserRole(null);
             }
+          }
         } catch (error) {
-            console.error("Auth role fetch error:", error);
-            setUserRole(null);
+          console.error("Auth role fetch error:", error);
+          setUserRole(null);
         }
       } else {
         setUser(null);

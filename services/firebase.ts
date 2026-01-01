@@ -13,17 +13,13 @@ const firebaseConfig = {
 };
 
 // Singleton initialization
-console.log("Firebase config check:", {
-  projectId: firebaseConfig.projectId,
-  apiKey: firebaseConfig.apiKey ? "OK" : "MISSING",
-  authDomain: firebaseConfig.authDomain ? "OK" : "MISSING"
-});
+console.log("🔥 Firebase Init:", { projectId: firebaseConfig.projectId });
 
 const app: FirebaseApp = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const db: Firestore = getFirestore(app);
 const auth: Auth = getAuth(app);
 
-console.log("Firebase initialized successfully for project:", firebaseConfig.projectId);
+console.log("✅ Firebase Services Loaded");
 
 // Secondary app for admin tasks (if needed)
 const secondaryAppName = "SecondaryApp";
