@@ -1,0 +1,65 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Перевірка на адміністратора (по UID або по ролі в документі)
+    function isAdmin() {
+      if (!isSignedIn()) return false;
+      let isSuperAdmin = request.auth.uid == 'CNJ4Lbz6KbM0vNOPAJjclEVA7Ju1';
+      let userPath = /databases/$(database)/documents/users/$(request.auth.uid);
+      return isSuperAdmin || (exists(userPath) && get(userPath).data.role == 'Administrator');
+    }
+
+    // Перевірка на співробітника СТО (Manager, Administrator, Owner)
+    function isStaff() {
+      if (!isSignedIn()) return false;
+      let isSuperAdmin = request.auth.uid == 'CNJ4Lbz6KbM0vNOPAJjclEVA7Ju1';
+      if (isSuperAdmin) return true;
+      
+      let userPath = /databases/$(database)/documents/users/$(request.auth.uid);
+      return exists(userPath) && 
+             get(userPath).data.role in ['Manager', 'Administrator', 'Owner'];
+    }
+
+    // Користувачі
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId || isAdmin());
+      allow create: if isSignedIn() && request.auth.uid == userId;
+      allow update, delete: if isAdmin();
+    }
+
+    // Налаштування компанії
+    match /settings/company {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    // Робочі колекції
+    // Дозволяємо читання всім авторизованим користувачам, щоб інтерфейс не "падав" при завантаженні
+    // Запис дозволено тільки персоналу
+    match /clients/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /cars/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /masters/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /services/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /serviceOrders/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /orderDetails/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /parts/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /carGroups/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /schematics/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /resources/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /bookings/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    
+    // Нові колекції для складу
+    match /inventory/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+    match /warehouseTransactions/{docId} { allow read: if isSignedIn(); allow write: if isStaff(); }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

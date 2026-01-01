@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>RemServ Auto Service</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    window.process = window.process || {};
+    window.process.env = window.process.env || {};
+    window.process.env.NODE_ENV = 'production';
+
+    window.onerror = function (msg, url, line, col, error) {
+      const errorContainer = document.getElementById('root-error');
+      if (errorContainer) {
+        errorContainer.style.display = 'block';
+        errorContainer.innerHTML += '<div style="margin-bottom:10px; border-bottom:1px solid #ccc; padding-bottom:5px;"><strong>Помилка:</strong> ' + msg + '<br/><small>' + url + ':' + line + '</small></div>';
+      }
+      console.error(msg, error);
+    };
+  </script>
+  <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.0/dist/es-module-shims.js"></script>
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
+    "@google/genai": "https://esm.sh/@google/genai@1.3.0",
+    "recharts": "https://esm.sh/recharts@2.15.0?external=react,react-dom",
+    "@heroicons/react/24/outline": "https://esm.sh/@heroicons/react@2.2.0/24/outline?external=react",
+    "@heroicons/react/24/solid": "https://esm.sh/@heroicons/react@2.2.0/24/solid?external=react",
+    "date-fns": "https://esm.sh/date-fns@4.1.0",
+    "date-fns/locale": "https://esm.sh/date-fns@4.1.0/locale",
+    "firebase/app": "https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js",
+    "firebase/firestore": "https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js",
+    "firebase/auth": "https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "firebase/": "https://esm.sh/firebase@^12.7.0/",
+    "@heroicons/react/": "https://esm.sh/@heroicons/react@^2.2.0/",
+    "date-fns/": "https://esm.sh/date-fns@^4.1.0/"
+  }
+}
+</script>
+  <style>
+    html, body { height: 100%; margin: 0; padding: 0; font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #1e293b; }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    #root-error { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 9999; padding: 20px; color: #dc2626; font-family: monospace; overflow: auto; }
+    
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in-up { animation: fadeInUp 0.3s ease-out forwards; }
+  </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="root-error">
+    <h3 style="color:black; font-size: 1.2em; margin-bottom: 10px;">Системна помилка завантаження</h3>
+  </div>
+  <div id="root"></div>
+  <script type="module" src="./index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>

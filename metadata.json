@@ -1,0 +1,7 @@
+{
+  "name": "RemServ Auto Service",
+  "description": "A comprehensive web application for the 'RemServ' auto service center to manage clients, cars, service orders, and services, built with React and Tailwind CSS.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
