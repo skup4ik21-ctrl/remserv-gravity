@@ -1,7 +1,7 @@
 
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlusIcon, MagnifyingGlassIcon, ListBulletIcon, Squares2X2Icon, CalendarDaysIcon, UserIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, MagnifyingGlassIcon, ListBulletIcon, Squares2X2Icon, CalendarDaysIcon, UserIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { OrderStatus, ServiceOrder } from '../../types';
 import { useServiceOrders } from '../../hooks/useServiceOrders';
 import { useClients } from '../../hooks/useClients';
@@ -34,7 +34,7 @@ const COLUMN_COLORS: { [key in OrderStatus]: string } = {
 
 const ServiceOrdersPage: React.FC = () => {
     const navigate = useNavigate();
-    const { orders: serviceOrders, updateServiceOrder, loading: ordersLoading } = useServiceOrders();
+    const { orders: serviceOrders, updateServiceOrder, loading: ordersLoading, error: ordersError } = useServiceOrders();
     const { clients } = useClients();
     const { cars } = useCars();
 
@@ -93,6 +93,13 @@ const ServiceOrdersPage: React.FC = () => {
     const boardStatuses = Object.values(OrderStatus);
 
     if (ordersLoading) return <div className="p-10 flex justify-center text-slate-500">Завантаження замовлень...</div>;
+    if (ordersError) return (
+        <div className="p-10 flex flex-col items-center justify-center text-red-500 bg-red-50 rounded-3xl border border-red-100 m-6">
+            <ExclamationTriangleIcon className="w-12 h-12 mb-4" />
+            <h3 className="text-lg font-bold">Помилка завантаження</h3>
+            <p className="text-sm opacity-80">{ordersError}</p>
+        </div>
+    );
 
     // --- Drag & Drop ---
     const handleDragStart = (e: React.DragEvent, orderId: string) => {
@@ -200,8 +207,8 @@ const ServiceOrdersPage: React.FC = () => {
                                 key={status}
                                 onClick={() => setActiveMobileStatus(status)}
                                 className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all border ${isActive
-                                        ? TAB_ACTIVE_COLORS[status]
-                                        : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
+                                    ? TAB_ACTIVE_COLORS[status]
+                                    : 'bg-white text-slate-500 border-slate-200 hover:bg-slate-50'
                                     }`}
                             >
                                 {status} <span className="opacity-70 text-xs ml-1 font-normal">({count})</span>
@@ -293,8 +300,8 @@ const ServiceOrdersPage: React.FC = () => {
                                 key={status}
                                 onClick={() => setStatusFilter(status)}
                                 className={`px-4 py-2 rounded-xl text-sm font-medium transition-all whitespace-nowrap ${statusFilter === status
-                                        ? 'bg-slate-800 text-white shadow-md'
-                                        : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+                                    ? 'bg-slate-800 text-white shadow-md'
+                                    : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
                                     }`}
                             >
                                 {status === 'all' ? 'Всі' : status}

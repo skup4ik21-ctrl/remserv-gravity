@@ -21,7 +21,7 @@ const LIGHT_STATUS_COLORS: { [key in OrderStatus]: string } = {
 
 const Dashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { orders: serviceOrders, loading: ordersLoading } = useServiceOrders();
+  const { orders: serviceOrders, loading: ordersLoading, error: ordersError } = useServiceOrders();
   const { clients } = useClients();
   const { cars } = useCars();
 
@@ -62,6 +62,7 @@ const Dashboard: React.FC = () => {
   }, [serviceOrders, clients, cars]);
 
   if (ordersLoading) return <div className="p-10 flex justify-center text-slate-500">Завантаження...</div>;
+  if (ordersError) return <div className="p-10 text-red-500 bg-red-50 m-6 rounded-2xl border border-red-100 italic">Помилка: {ordersError}</div>;
 
   return (
     <>

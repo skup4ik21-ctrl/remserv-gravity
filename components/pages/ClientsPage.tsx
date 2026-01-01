@@ -23,7 +23,7 @@ const LIGHT_STATUS_COLORS: { [key: string]: string } = {
 
 const ClientsPage: React.FC = () => {
     const navigate = useNavigate();
-    const { clients, loading: clientsLoading } = useClients();
+    const { clients, loading: clientsLoading, error: clientsError } = useClients();
     const { cars } = useCars();
     const { orders: serviceOrders } = useServiceOrders();
 
@@ -39,6 +39,7 @@ const ClientsPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<'orders' | 'cars'>('orders');
 
     if (clientsLoading) return <div className="p-10 flex justify-center text-slate-500">Завантаження клієнтів...</div>;
+    if (clientsError) return <div className="p-10 text-red-500 bg-red-50 m-6 rounded-2xl border border-red-100 italic">Помилка: {clientsError}</div>;
 
     const filteredClients = useMemo(() => {
         if (!searchTerm) {
@@ -259,8 +260,8 @@ const ClientsPage: React.FC = () => {
                             <button
                                 onClick={() => setActiveTab('orders')}
                                 className={`whitespace-nowrap pb-4 px-1 border-b-2 font-semibold text-sm transition-colors ${activeTab === 'orders'
-                                        ? 'border-blue-500 text-blue-600'
-                                        : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                                    ? 'border-blue-500 text-blue-600'
+                                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                                     }`}
                             >
                                 Історія замовлень ({selectedClientDetails.orders.length})
@@ -268,8 +269,8 @@ const ClientsPage: React.FC = () => {
                             <button
                                 onClick={() => setActiveTab('cars')}
                                 className={`whitespace-nowrap pb-4 px-1 border-b-2 font-semibold text-sm transition-colors ${activeTab === 'cars'
-                                        ? 'border-blue-500 text-blue-600'
-                                        : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+                                    ? 'border-blue-500 text-blue-600'
+                                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
                                     }`}
                             >
                                 Автомобілі клієнта ({selectedClientDetails.cars.length})
