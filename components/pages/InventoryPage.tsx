@@ -4,13 +4,13 @@ import { InventoryItem, WarehouseTransaction, TransactionType } from '../../type
 import {
     ArchiveBoxIcon, DocumentTextIcon, PrinterIcon, PlusIcon,
     ArrowUpTrayIcon, ArrowDownTrayIcon, MagnifyingGlassIcon,
-    ExclamationCircleIcon, ArrowPathRoundedSquareIcon
+    ExclamationCircleIcon, ArrowPathRoundedSquareIcon, ExclamationTriangleIcon
 } from '@heroicons/react/24/outline';
 import { useInventory } from '../../hooks/useInventory';
 import { useCompanySettings } from '../../hooks/useCompanySettings';
 
 const InventoryPage: React.FC = () => {
-    const { inventory, transactions, loading: invLoading } = useInventory();
+    const { inventory, transactions, loading: invLoading, error: invError } = useInventory();
     const { settings: companySettings } = useCompanySettings();
 
     const [activeTab, setActiveTab] = useState<'stock' | 'transactions'>('stock');
@@ -37,6 +37,14 @@ const InventoryPage: React.FC = () => {
     };
 
     if (invLoading) return <div className="p-10 flex justify-center text-slate-500">Завантаження складу...</div>;
+
+    if (invError) return (
+        <div className="p-10 flex flex-col items-center justify-center text-red-500 bg-red-50 rounded-3xl border border-red-100 m-6">
+            <ExclamationTriangleIcon className="w-12 h-12 mb-4" />
+            <h3 className="text-lg font-bold">Помилка завантаження складу</h3>
+            <p className="text-sm opacity-80">{invError}</p>
+        </div>
+    );
 
     return (
         <div className="space-y-6">

@@ -5,7 +5,7 @@ import AddCarModal from '../modals/AddCarModal';
 import { EditCarModal } from '../modals/EditCarModal';
 import ConfirmActionModal from './ConfirmDeleteModal';
 import CarHistoryModal from '../modals/CarHistoryModal';
-import { PlusIcon, MagnifyingGlassIcon, EllipsisVerticalIcon, WrenchIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, MagnifyingGlassIcon, EllipsisVerticalIcon, WrenchIcon, PencilIcon, TrashIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { useCars } from '../../hooks/useCars';
 import { useClients } from '../../hooks/useClients';
 
@@ -45,8 +45,8 @@ const CarCardActions: React.FC<{ onEdit: () => void; onDelete: () => void }> = (
 };
 
 const CarsPage: React.FC = () => {
-    const { cars, loading: carsLoading, deleteCar } = useCars();
-    const { clients, loading: clientsLoading } = useClients();
+    const { cars, loading: carsLoading, error: carsError, deleteCar } = useCars();
+    const { clients, loading: clientsLoading, error: clientsError } = useClients();
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -100,7 +100,15 @@ const CarsPage: React.FC = () => {
         setIsHistoryModalOpen(true);
     };
 
-    if (carsLoading || clientsLoading) return <div className="p-8 text-center text-slate-500">Завантаження...</div>;
+    if (carsLoading || clientsLoading) return <div className="p-10 flex justify-center text-slate-500">Завантаження автомобілів...</div>;
+
+    if (carsError || clientsError) return (
+        <div className="p-10 flex flex-col items-center justify-center text-red-500 bg-red-50 rounded-3xl border border-red-100 m-6">
+            <ExclamationTriangleIcon className="w-12 h-12 mb-4" />
+            <h3 className="text-lg font-bold">Помилка завантаження даних</h3>
+            <p className="text-sm opacity-80">{carsError || clientsError}</p>
+        </div>
+    );
 
     return (
         <div className="space-y-6">

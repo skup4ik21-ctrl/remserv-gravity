@@ -1,6 +1,6 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
-import { PlusIcon, UserIcon, WrenchScrewdriverIcon, CurrencyDollarIcon, PencilIcon, TrashIcon, ArrowPathIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, UserIcon, WrenchScrewdriverIcon, CurrencyDollarIcon, PencilIcon, TrashIcon, ArrowPathIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import AddEditMasterModal from '../modals/AddEditMasterModal';
 import ConfirmActionModal from './ConfirmDeleteModal';
 import { Master, OrderStatus, ServiceOrder, OrderDetail } from '../../types';
@@ -9,7 +9,7 @@ import { db } from '../../services/firebase';
 import { useMasters } from '../../hooks/useMasters';
 
 const MastersPage: React.FC = () => {
-    const { masters, loading: mastersLoading, deleteMaster } = useMasters();
+    const { masters, loading: mastersLoading, error: mastersError, deleteMaster } = useMasters();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -101,6 +101,15 @@ const MastersPage: React.FC = () => {
         setMasterToDelete(null);
     };
 
+    if (mastersLoading) return <div className="p-10 flex justify-center text-slate-500">Завантаження майстрів...</div>;
+
+    if (mastersError) return (
+        <div className="p-10 flex flex-col items-center justify-center text-red-500 bg-red-50 rounded-3xl border border-red-100 m-6">
+            <ExclamationTriangleIcon className="w-12 h-12 mb-4" />
+            <h3 className="text-lg font-bold">Помилка завантаження майстрів</h3>
+            <p className="text-sm opacity-80">{mastersError}</p>
+        </div>
+    );
 
     return (
         <>

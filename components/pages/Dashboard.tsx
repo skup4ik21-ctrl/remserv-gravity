@@ -1,7 +1,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlusIcon, UserPlusIcon, WrenchScrewdriverIcon, DocumentPlusIcon, CalendarDaysIcon } from '@heroicons/react/24/outline';
+import { PlusIcon, UserPlusIcon, WrenchScrewdriverIcon, DocumentPlusIcon, CalendarDaysIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import AddClientModal from '../modals/AddClientModal';
 import { OrderStatus } from '../../types';
 import { startOfWeek, endOfWeek, isWithinInterval, parseISO, format } from 'date-fns';
@@ -62,7 +62,13 @@ const Dashboard: React.FC = () => {
   }, [serviceOrders, clients, cars]);
 
   if (ordersLoading) return <div className="p-10 flex justify-center text-slate-500">Завантаження...</div>;
-  if (ordersError) return <div className="p-10 text-red-500 bg-red-50 m-6 rounded-2xl border border-red-100 italic">Помилка: {ordersError}</div>;
+  if (ordersError) return (
+    <div className="p-10 flex flex-col items-center justify-center text-red-500 bg-red-50 rounded-3xl border border-red-100 m-6">
+      <ExclamationTriangleIcon className="w-12 h-12 mb-4" />
+      <h3 className="text-lg font-bold">Помилка завантаження даних</h3>
+      <p className="text-sm opacity-80">{ordersError}</p>
+    </div>
+  );
 
   return (
     <>
