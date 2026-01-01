@@ -38,8 +38,7 @@ const ClientsPage: React.FC = () => {
     const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
     const [activeTab, setActiveTab] = useState<'orders' | 'cars'>('orders');
 
-    if (clientsLoading) return <div className="p-10 flex justify-center text-slate-500">Завантаження клієнтів...</div>;
-    if (clientsError) return <div className="p-10 text-red-500 bg-red-50 m-6 rounded-2xl border border-red-100 italic">Помилка: {clientsError}</div>;
+
 
     const filteredClients = useMemo(() => {
         if (!searchTerm) {
@@ -90,6 +89,14 @@ const ClientsPage: React.FC = () => {
             cars: clientCars,
         };
     }, [selectedClientId, clients, serviceOrders, cars]);
+
+    if (clientsLoading) return <div className="p-10 flex justify-center text-slate-500 italic">Завантаження клієнтів...</div>;
+    if (clientsError) return (
+        <div className="p-10 flex flex-col items-center justify-center text-red-500 bg-red-50 rounded-3xl border border-red-100 m-6">
+            <h3 className="text-lg font-bold">Помилка завантаження</h3>
+            <p className="text-sm opacity-80">{clientsError}</p>
+        </div>
+    );
 
 
     const handleEditClick = (e: React.MouseEvent, client: Client) => {
