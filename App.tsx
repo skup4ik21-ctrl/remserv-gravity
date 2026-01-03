@@ -47,9 +47,9 @@ class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundarySta
 
 // Wrapper for Order Detail to use params
 const ServiceOrderDetailWrapper = () => {
-  const { id } = useParams();
-  if (!id) return <Navigate to="/orders" />;
-  return <ServiceOrderDetailPage orderId={id} />;
+  const { orderID } = useParams();
+  if (!orderID) return <Navigate to="/orders" />;
+  return <ServiceOrderDetailPage />;
 };
 
 const AuthenticatedApp: React.FC = () => {
@@ -63,7 +63,7 @@ const AuthenticatedApp: React.FC = () => {
       <Route path="/" element={<MainLayout />}>
         <Route index element={<Dashboard />} />
         <Route path="orders" element={<ServiceOrdersPage />} />
-        <Route path="orders/:id" element={<ServiceOrderDetailWrapper />} />
+        <Route path="orders/:orderID" element={<ServiceOrderDetailWrapper />} />
         <Route path="inventory" element={<InventoryPage />} />
         <Route path="create-order" element={<CreateServiceOrderPage />} />
         <Route path="calendar" element={<CalendarPage />} />
