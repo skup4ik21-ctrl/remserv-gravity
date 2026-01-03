@@ -26,9 +26,18 @@ jobs:
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
           VITE_GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
 
-      - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          args: deploy --only hosting,firestore:rules,firestore:indexes --project remservaistudio
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_REMSERVAISTUDIO }}'
+          channelId: live
+          projectId: remservaistudio
+
+      - name: Create Service Account Key File
+        run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT_REMSERVAISTUDIO }}" > service-account-key.json
+
+      - name: Deploy Firestore Rules and Indexes
+        run: npx firebase-tools deploy --only firestore --project remservaistudio
         env:
-          GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_REMSERVAISTUDIO }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ github.workspace }}/service-account-key.json
